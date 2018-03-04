@@ -27,17 +27,13 @@ class App extends Component {
         }
     }
     componentDidMount() {
+      console.log('/app')
         const openNotification = () => {
             notification.open({
-              message: '博主-yezihaohao',
+              message: '小程序分析',
               description: (
                   <div>
-                      <p>
-                          GitHub地址： <a href="https://github.com/yezihaohao" target="_blank" rel="noopener noreferrer">https://github.com/yezihaohao</a>
-                      </p>
-                      <p>
-                          博客地址： <a href="https://yezihaohao.github.io/" target="_blank" rel="noopener noreferrer">https://yezihaohao.github.io/</a>
-                      </p>
+                  123
                   </div>
               ),
               icon: <Icon type="smile-circle" style={{ color: 'red' }} />,
@@ -46,7 +42,8 @@ class App extends Component {
             localStorage.setItem('isFirst', JSON.stringify(true));
         };
         const isFirst = JSON.parse(localStorage.getItem('isFirst'));
-        !isFirst && openNotification();
+         openNotification()
+        // !isFirst && openNotification();
     }
     getClientWidth = () => {    // 获取当前浏览器宽度并设置responsive管理响应式
         const { receiveData } = this.props;
@@ -75,7 +72,7 @@ class App extends Component {
                     React-Admin ©2017 Created by 865470087@qq.com
                     </Footer>
                 </Layout>
-                
+
                 {
                     responsive.data.isMobile && (   // 手机端对滚动很慢的处理
                         <style>

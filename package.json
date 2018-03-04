@@ -30,8 +30,10 @@
     "extract-text-webpack-plugin": "2.1.2",
     "file-loader": "0.11.2",
     "fs-extra": "3.0.1",
+    "highcharts": "^6.0.7",
     "html-webpack-plugin": "2.29.0",
     "jest": "20.0.4",
+    "lodash": "^4.17.5",
     "nprogress": "^0.2.0",
     "object-assign": "4.1.1",
     "photoswipe": "^4.1.2",
@@ -46,6 +48,7 @@
     "react-draft-wysiwyg": "^1.10.0",
     "react-draggable": "^2.2.6",
     "react-error-overlay": "^1.0.9",
+    "react-highcharts": "^16.0.2",
     "react-redux": "^5.0.5",
     "react-router-dom": "^4.2.2",
     "recharts": "^1.0.0-alpha.1",
@@ -113,5 +116,6 @@
   },
   "eslintConfig": {
     "extends": "react-app"
-  }
+  },
+  "proxy": "http://localhost:8080/"
 }
