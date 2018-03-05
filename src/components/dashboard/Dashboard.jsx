@@ -9,11 +9,11 @@ import EchartsViews from './EchartsViews';
 import EchartsArea from './EchartsArea';
 import b1 from '../../style/imgs/b1.jpg';
 import css from './cus.css';
+import 'whatwg-fetch';
 
 
-
-import 'whatwg-fetch'
 const ReactHighcharts = require('react-highcharts');
+var senceKey= require('./sence.json');
 
 const TabPane = Tabs.TabPane;
 const menu = (
@@ -33,31 +33,48 @@ const menu = (
 
 const columns = [{
     title: '页面',
-    dataIndex: 'name',
-    key: 'name',
+    dataIndex: 'item',
+    key: 'item',
     render: text => <a>{text}</a>,
 }, {
     title: '访问次数',
-    dataIndex: 'age',
-    key: 'age',
+    dataIndex: 'num',
+    key: 'num',
+}];
+const columnssence = [{
+    title: '场景',
+    dataIndex: 'item',
+    key: 'item',
+    render: text => <a>{senceKey[text]}</a>,
+}, {
+    title: '访问次数',
+    dataIndex: 'num',
+    key: 'num',
 }];
 
-const data = [{
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
+const columnsregion = [{
+    title: '省份',
+    dataIndex: 'item',
+    key: 'item',
+    render: text => <a>{text}</a>,
 }, {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-}, {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
+    title: '访问次数',
+    dataIndex: 'num',
+    key: 'num',
 }];
+
+const columnsreferer = [{
+    title: '来源',
+    dataIndex: 'item',
+    key: 'item',
+    render: text => <a>{text}</a>,
+}, {
+    title: '访问次数',
+    dataIndex: 'num',
+    key: 'num',
+}];
+
+
 
 
 function dataForDay(data) {
@@ -79,7 +96,7 @@ class Dashboard extends React.Component {
   }
   componentDidMount() {
     var _this=this;
-      fetch('/showdata/9885790/present_and_past ')
+      fetch('/showdata/9885790/present_and_past')
         .then(function(response) {
           return response.json()
         }).then(function(jsonData) {
@@ -100,6 +117,57 @@ class Dashboard extends React.Component {
 
              })
           })
+          fetch('/showdata/9885790/page_line/0')
+            .then(function(response) {
+              return response.json()
+            }).then(function(jsonData) {
+               _this.setState({
+                 chart:{
+                     name: '访问次数',
+                     data: dataForDay(jsonData)
+                 }
+
+               })
+            })
+
+            fetch('/showdata/9885790/topn_pageurl')
+              .then(function(response) {
+                return response.json()
+              }).then(function(jsonData) {
+                 _this.setState({
+                   pageurl:jsonData
+
+                 })
+              })
+            fetch('/showdata/9885790/topn_scene')
+                .then(function(response) {
+                  return response.json()
+                }).then(function(jsonData) {
+                   _this.setState({
+                     scene:jsonData
+
+                   })
+            })
+
+            fetch('/showdata/9885790/topn_region')
+                .then(function(response) {
+                  return response.json()
+                }).then(function(jsonData) {
+                   _this.setState({
+                     region:jsonData
+
+                   })
+            })
+            fetch('/showdata/9885790/topn_referer')
+                .then(function(response) {
+                  return response.json()
+                }).then(function(jsonData) {
+                   _this.setState({
+                     referer:jsonData
+
+                   })
+            })
+
 
     }
     today(data){
@@ -239,6 +307,7 @@ class Dashboard extends React.Component {
     }
     render() {
 console.log(this.state.chart)
+console.log('pageurl',this.state.pageurl)
 
     var  config={
     title: {
@@ -320,14 +389,15 @@ console.log(this.state.chart)
                 </Row>
                 <Row gutter={10}>
 
-                    <Col className="gutter-row" md={8}>
+                    <Col className="gutter-row" md={12}>
                         <div className="gutter-box">
                             <Card bordered={false}>
                                 <div className="pb-m">
                                     <h3>TOP10的受访页面</h3>
                                 </div>
                                 <div className="ant-table-body">
-                                <Table columns={columns} dataSource={data} />
+            {this.state.pageurl?(<Table columns={columns} dataSource={this.state.pageurl} />):(null)}
+
 
 
                                 </div>
@@ -337,14 +407,15 @@ console.log(this.state.chart)
                             </Card>
                         </div>
                     </Col>
-                    <Col className="gutter-row" md={8}>
+                    <Col className="gutter-row" md={12}>
                         <div className="gutter-box">
                             <Card bordered={false}>
                                 <div className="pb-m">
-                                    <h3>TOP10的受访页面</h3>
+                                    <h3>TOP10的省份</h3>
                                 </div>
                                 <div className="ant-table-body">
-                                <Table columns={columns} dataSource={data} />
+                                {this.state.region?(<Table columns={columnsregion} dataSource={this.state.region} />):(null)}
+
 
 
                                 </div>
@@ -354,14 +425,33 @@ console.log(this.state.chart)
                             </Card>
                         </div>
                     </Col>
-                    <Col className="gutter-row" md={8}>
+                    <Col className="gutter-row" md={12}>
                         <div className="gutter-box">
                             <Card bordered={false}>
                                 <div className="pb-m">
-                                    <h3>TOP10的受访页面</h3>
+                                    <h3>TOP10的场景</h3>
                                 </div>
                                 <div className="ant-table-body">
-                                <Table columns={columns} dataSource={data} />
+                              {this.state.scene?(<Table columns={columnssence} dataSource={this.state.scene} />):(null)}
+
+
+
+                                </div>
+
+
+
+                            </Card>
+                        </div>
+                    </Col>
+                    <Col className="gutter-row" md={12}>
+                        <div className="gutter-box">
+                            <Card bordered={false}>
+                                <div className="pb-m">
+                                    <h3>TOP10的来源</h3>
+                                </div>
+                                <div className="ant-table-body">
+
+                                {this.state.referer?(<Table columns={columnsreferer} dataSource={this.state.referer} />):(null)}
 
 
                                 </div>
