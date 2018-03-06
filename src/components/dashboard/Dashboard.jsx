@@ -10,6 +10,7 @@ import EchartsArea from './EchartsArea';
 import b1 from '../../style/imgs/b1.jpg';
 import css from './cus.css';
 import 'whatwg-fetch';
+import * as moment from 'moment';
 
 
 const ReactHighcharts = require('react-highcharts');
@@ -82,9 +83,11 @@ var keyvalue={
 
 
 function dataForDay(data) {
+  console.log(moment)
   return  _.map(data,function(item) {
     return {
-      x:item.index+1,
+      x:moment(item.time).toDate().getTime(),
+      // x:item.time,
       y:item.item.num!=undefined?item.item.num:0
     }
   })
@@ -347,7 +350,8 @@ console.log('pageurl',this.state.pageurl)
         }
     },
     xAxis: {
-        type:'category'
+        type:'datetime'
+        // type:'category'
     },
 
     legend: {
@@ -391,8 +395,9 @@ console.log('pageurl',this.state.pageurl)
                     <div className="gutter-box">
                         <Card
                         title={ <Radio.Group onChange={this.daytypeclick} >
-                                <Radio.Button value="1">今天</Radio.Button>
-                                <Radio.Button value="0">昨天</Radio.Button>
+                                <Radio.Button value="0">今天</Radio.Button>
+                                <Radio.Button value="-1">昨天</Radio.Button>
+                                <Radio.Button value="7">最近7天</Radio.Button>
 
                             </Radio.Group>}
 
