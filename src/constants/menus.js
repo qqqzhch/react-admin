@@ -1,6 +1,8 @@
 export const menus = [
-    { key: '/app/dashboard/index', title: '首页', icon: 'mobile', },
-    {
+  { key: '/app/applist', title: '应用', icon: 'mobile', },
+  { key: '/app/dashboard/index', title: '纵览', icon: 'mobile'},
+  { key: '/app/dashboard/trend', title: '趋势', icon: 'mobile'},
+  {
         key: '/app/ui', title: 'UI', icon: 'scan',
         sub: [
             { key: '/app/ui/buttons', title: '按钮', icon: '', },

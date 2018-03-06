@@ -16,19 +16,7 @@ const ReactHighcharts = require('react-highcharts');
 var senceKey= require('./sence.json');
 
 const TabPane = Tabs.TabPane;
-const menu = (
-  <Menu>
-    <Menu.Item>
-      新用用户数
-    </Menu.Item>
-    <Menu.Item>
-      访问人数
-    </Menu.Item>
-    <Menu.Item>
-      访问次数
-    </Menu.Item>
-  </Menu>
-);
+
 
 
 const columns = [{
@@ -75,6 +63,22 @@ const columnsreferer = [{
 }];
 
 
+var keyvalue={
+  new_vistior_line:'新用用户数',
+  vistior_line:'访问人数',
+  page_line:'访问次数'
+}
+// <Menu.Item key="new_vistior_line" >
+//   新用用户数
+// </Menu.Item>
+// <Menu.Item key="vistior_line">
+//   访问人数
+// </Menu.Item>
+// <Menu.Item key="page_line">
+//   访问次数
+// </Menu.Item>
+
+
 
 
 function dataForDay(data) {
@@ -89,11 +93,53 @@ function dataForDay(data) {
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
+    this.daytypeclick=this.daytypeclick.bind(this);
+
 
     this.state = {
       today:null,
+      linetoday:1,
+      linetype:'page_line'
     };
   }
+  daytypeclick(e){
+   console.log(e.target.value)
+   this.getlinedata(e.target.value)
+  }
+  getlinedata(today,linetype) {
+    var _this=this;
+    this.setState({linetoday:today})
+    fetch('/showdata/9885790/page_line/'+today)
+      .then(function(response) {
+        return response.json()
+      }).then(function(jsonData) {
+         _this.setState({
+           chart:{
+               name: keyvalue[linetype],
+               data: dataForDay(jsonData)
+           }
+
+         })
+      })
+  }
+  handleMenuClick(e){
+    console.log(e.key);
+    this.getlinedata(this.state.linetoday,e.key)
+
+  }
+  menu = (
+    <Menu onClick={this.handleMenuClick.bind(this)}>
+      <Menu.Item key="new_vistior_line" >
+        新用用户数
+      </Menu.Item>
+      <Menu.Item key="vistior_line">
+        访问人数
+      </Menu.Item>
+      <Menu.Item key="page_line">
+        访问次数
+      </Menu.Item>
+    </Menu>
+  );
   componentDidMount() {
     var _this=this;
       fetch('/showdata/9885790/present_and_past')
@@ -105,30 +151,9 @@ class Dashboard extends React.Component {
 
            })
         })
-        fetch('/showdata/9885790/page_line/0')
-          .then(function(response) {
-            return response.json()
-          }).then(function(jsonData) {
-             _this.setState({
-               chart:{
-                   name: '访问次数',
-                   data: dataForDay(jsonData)
-               }
+        this.getlinedata(1,'page_line')
 
-             })
-          })
-          fetch('/showdata/9885790/page_line/0')
-            .then(function(response) {
-              return response.json()
-            }).then(function(jsonData) {
-               _this.setState({
-                 chart:{
-                     name: '访问次数',
-                     data: dataForDay(jsonData)
-                 }
 
-               })
-            })
 
             fetch('/showdata/9885790/topn_pageurl')
               .then(function(response) {
@@ -365,14 +390,14 @@ console.log('pageurl',this.state.pageurl)
                 <Col className="gutter-row" >
                     <div className="gutter-box">
                         <Card
-                        title={ <Radio.Group >
-                                <Radio.Button value="large">今天</Radio.Button>
-                                <Radio.Button value="default">昨天</Radio.Button>
+                        title={ <Radio.Group onChange={this.daytypeclick} >
+                                <Radio.Button value="1">今天</Radio.Button>
+                                <Radio.Button value="0">昨天</Radio.Button>
 
                             </Radio.Group>}
 
                         bordered={false} className={'no-padding'}>
-                        <Dropdown overlay={menu}>
+                        <Dropdown overlay={this.menu}>
    <a className="ant-dropdown-link">
         <Button>请选择指标</Button><Icon type="down" />
    </a>
